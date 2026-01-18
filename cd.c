@@ -11,7 +11,10 @@ int cd(char* input_arg[], int* input_arg_number)
 {
     if(*input_arg_number == 1)
     {
-        chdir(getenv("HOME"));
+        if(chdir(getenv("HOME")) != 0)
+        {
+            perror("chdir failed");
+        }
         return 0; 
     }
     else
@@ -48,8 +51,10 @@ int cd(char* input_arg[], int* input_arg_number)
                 }
                 else if(strcmp(input_arg[1], "~") == 0)
                 {
-                    chdir(getenv("HOME"));
-                    return 0;
+                    if(chdir(getenv("HOME")) != 0)
+                    {
+                        perror("chdir failed");
+                    }
                 }
                 
 

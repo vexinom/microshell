@@ -126,7 +126,7 @@ void handle_input(char input_line[], int input_size, char* history[], int *histo
         if(c == '\n')
         {
             input_line[length] = '\0';
-            write(STDOUT_FILENO, "\n", 1);
+            (void)!write(STDOUT_FILENO, "\n", 1);
             break;
         }
         else if(c == 127 || c == '\b')
@@ -137,13 +137,13 @@ void handle_input(char input_line[], int input_size, char* history[], int *histo
                 cursor_position --;
                 length --;
 
-                write(STDOUT_FILENO, "\033[D", 3);
-                write(STDOUT_FILENO, &input_line[cursor_position], length - cursor_position);
-                write(STDOUT_FILENO, " ", 1);
+                (void)!write(STDOUT_FILENO, "\033[D", 3);
+                (void)!write(STDOUT_FILENO, &input_line[cursor_position], length - cursor_position);
+                (void)!write(STDOUT_FILENO, " ", 1);
 
                 for(int i = cursor_position; i < length + 1; i++)
                 {
-                    write(STDOUT_FILENO, "\033[D", 3);
+                    (void)!write(STDOUT_FILENO, "\033[D", 3);
                 }
             }
         }
@@ -190,7 +190,7 @@ void handle_input(char input_line[], int input_size, char* history[], int *histo
                     case 'C': //RIGTH
                         if(cursor_position < length)
                         {
-                            write(STDOUT_FILENO, "\033[C", 3);
+                            (void)!write(STDOUT_FILENO, "\033[C", 3);
                             cursor_position++;
                         }
                     break;
@@ -199,7 +199,7 @@ void handle_input(char input_line[], int input_size, char* history[], int *histo
                     case 'D': //LEFT
                         if(cursor_position > 0)
                         {
-                            write(STDOUT_FILENO, "\033[D", 3);
+                            (void)!write(STDOUT_FILENO, "\033[D", 3);
                             cursor_position--;
                         }
                     break;
@@ -209,11 +209,11 @@ void handle_input(char input_line[], int input_size, char* history[], int *histo
                 {
                     for(int i = 0; i < length; i++)
                     {
-                        write(STDOUT_FILENO, "\b \b", 3);
+                        (void)!write(STDOUT_FILENO, "\b \b", 3);
                     }
                     length = strlen(history_line);
                     strcpy(input_line, history_line);
-                    write(STDOUT_FILENO, input_line, length);
+                    (void)!write(STDOUT_FILENO, input_line, length);
                     cursor_position = length;
                 }
             }
@@ -229,11 +229,11 @@ void handle_input(char input_line[], int input_size, char* history[], int *histo
                 length++;
                 cursor_position++;
 
-                write(STDOUT_FILENO, &input_line[cursor_position - 1], length - (cursor_position -1));
+                (void)!write(STDOUT_FILENO, &input_line[cursor_position - 1], length - (cursor_position -1));
 
                 for(int i = cursor_position; i < length; i++)
                 {
-                    write(STDOUT_FILENO, "\033[D", 3);
+                    (void)!write(STDOUT_FILENO, "\033[D", 3);
                 }
             }
         }

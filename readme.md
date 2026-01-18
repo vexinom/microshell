@@ -3,6 +3,10 @@
 Microshell written purely in C.
 
 ## Compiling
+Download
+```
+git clone https://github.com/vexinom/microshell.git
+```
 
 Debug verison
 ```

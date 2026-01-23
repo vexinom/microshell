@@ -331,6 +331,8 @@ int handle_commands(char* input_arg[], int* input_arg_number)
         {
             if(cd(input_arg, input_arg_number) != 0)
             {
+                printf("Type 'cd --help' for more information.\n");
+                return -1;
 
             }
             return 0;
@@ -339,6 +341,8 @@ int handle_commands(char* input_arg[], int* input_arg_number)
         {
             if(echo(input_arg, input_arg_number) != 0)
             {
+                printf("Type 'echo --help' for more information.\n");
+                return -1;
 
             }
             return 0;
@@ -357,7 +361,8 @@ int handle_commands(char* input_arg[], int* input_arg_number)
         {
             if(ls(input_arg, input_arg_number) != 0)
             {
-
+                printf("Type 'ls --help' for more information.\n");
+                return -1;
             }
             return 0;
         }
@@ -365,7 +370,8 @@ int handle_commands(char* input_arg[], int* input_arg_number)
         {
             if(pwd(input_arg, input_arg_number) != 0)
             {
-                
+                printf("Type 'pwd --help' for more information.\n");
+                return -1;    
             }
             return 0;
         }

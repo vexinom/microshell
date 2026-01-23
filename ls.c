@@ -136,6 +136,9 @@ int ls(char* input_arg[], int* input_arg_number)
                 case 't': sort_by_time = true; break;
                 case 'l': long_format = true; break;
                 case 'S': sort_by_size = true; break;
+                default:
+                    printf("ls: Invalid option -- '%c'\n", command_arg[i]);
+                    return -1;
             }
         }
         int long_arg_counter = 0;
@@ -184,27 +187,51 @@ int ls(char* input_arg[], int* input_arg_number)
         int path = 1 + arg_size + long_arg_counter; 
         do
         {
-
             DIR *d;
             struct dirent *dir;
             struct stat st;
             char *dir_name = ".";
+            bool is_file = false;
 
+            //If no argument after -al etc ... was typed, print files from current directory
             if (path == *input_arg_number)
             {
+                dir_name = ".";
                 d = opendir(dir_name);
             }
             else
             {
-                dir_name = input_arg[path];
-                d = opendir(dir_name);
-                if(d == NULL)
+
+                if (stat(input_arg[path], &st) != 0)
                 {
-                    printf("ls: Cannot access '%s': No such file or directory\n", input_arg[path]);
+                    printf("ls: Cannot access '%s': No such file or directory2\n", input_arg[path]);
                     return -1;
                 }
-                printf("Directory: %s\n", input_arg[path]);
-                printf("-----------------\n");
+                if (S_ISDIR(st.st_mode))
+                {
+                    dir_name = input_arg[path];
+                    d = opendir(input_arg[path]);
+                    if(!d)
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        printf("Directory: %s\n", input_arg[path]);
+                        printf("-----------------\n");
+                    }
+
+                }
+                else if(S_ISREG(st.st_mode))
+                {
+                    is_file = true;
+                }
+                else
+                {
+                    printf("%s not a regular file or directory \n", input_arg[path]);
+                    return -1;
+                }
+                
 
             }
             
@@ -213,7 +240,48 @@ int ls(char* input_arg[], int* input_arg_number)
             t_entry entries[1024];
             int counter = 0;
 
-            if(d)
+            if(is_file == true)
+            {
+                const char *file_name = input_arg[path];
+
+                struct stat file_stat;
+                if(stat(file_name, &file_stat) == -1)
+                {
+                    printf("ls error\n");
+                    return -1;
+                }
+                if(inode == true)
+                {
+                    printf("%lu\t", (unsigned long)file_stat.st_ino);
+                }
+                if(long_format == true)
+                {
+                    ls_print_permissions(file_stat.st_mode);
+                    printf(" %lu", (unsigned long)file_stat.st_nlink);
+                    ls_print_owner_group(file_stat.st_uid, file_stat.st_gid);
+                    printf(" %6ld", (long)file_stat.st_size);
+                    ls_print_time(file_stat.st_mtime);
+                    printf(" ");
+                }
+
+                if(file_stat.st_mode & (S_IXUSR | S_IXGRP |S_IXOTH)) //execs
+                {
+                    printf("\033[92m%s\033[0m\n", file_name);
+                }
+                else if(file_name[0] == '.') //hidden
+                {
+                    printf("\033[95m%s\033[0m\n", file_name);
+                }
+                else //regular
+                {
+                    printf("%s\n", file_name);
+                }
+                
+
+
+            }
+
+            else if(d)
             {
                 while((dir = readdir(d)) != NULL)
                 {
@@ -321,7 +389,7 @@ int ls(char* input_arg[], int* input_arg_number)
                         }
                         
                     }
-                    else if(st.st_mode & (S_IXUSR | S_IXGRP |S_IXOTH))  //exectubles
+                    else if(entries[i].mode & (S_IXUSR | S_IXGRP |S_IXOTH))  //exectubles
                     {
                         if(hidden == true)
                         {
@@ -350,9 +418,12 @@ int ls(char* input_arg[], int* input_arg_number)
 
                     }
                     
-                    
+
                 }
-                closedir(d);
+                if (d)
+                {
+                    closedir(d);
+                }
                 printf("\n");
             }
           path++;

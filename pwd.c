@@ -9,7 +9,7 @@
 #include <pwd.h>
 
 
-int pwd(char* arguments[], int* arguments_number)
+int pwd(char* input_arg[], int* input_arg_number)
 {
     enum mode{
         LOGICAL = 0,
@@ -19,16 +19,43 @@ int pwd(char* arguments[], int* arguments_number)
     enum mode pwd_mode = LOGICAL;
     bool help = false;
 
-    if(*arguments_number > 2)
+    char command_arg[MAX_COMMAND_ARG]= {0};
+    int command_arg_number = 0;
+    int arg_size = 0;
+
+    
+    if(input_arg[1] != NULL && input_arg[1][0] != '\0' && input_arg[1][1] != '\0') 
     {
-        printf("pwd: Too many arguments\n");
-        return -1;
-    }
-    if(*arguments_number == 2)
-    {
-        if(arguments[1][0] == '-' && arguments[1][1] == '-' && arguments[1][2] != '\0')
+
+        if(input_arg[1][0] == '-' && input_arg[1][1] != '-')
         {
-            if(strcmp(arguments[1], "--help") == 0)
+
+            arg_size = arguments_parser(input_arg, input_arg_number, command_arg, &command_arg_number);
+
+
+            for(int i = 0; i < command_arg_number; i++)
+            {
+                switch(command_arg[i])
+                {
+                    case 'L':
+                        pwd_mode = LOGICAL;
+                    break;
+
+                    case 'P':
+                        pwd_mode = PHYSICAL;
+                    break;
+
+                    default:
+                        printf("pwd: Invalid option '%c'\n", command_arg[i]);
+                        return -1;
+                
+                }
+            }
+            
+        }
+        else if(input_arg[1][0] == '-' && input_arg[1][1] == '-' && input_arg[1][2] != '\0')
+        {
+            if(strcmp(input_arg[1], "--help") == 0)
             {
                 help = true;
                 printf("\npwd - print name of current/working directory\n");
@@ -43,34 +70,14 @@ int pwd(char* arguments[], int* arguments_number)
                 return -1;
             }
         }
-        else if(arguments[1][0] == '-' && arguments[1][1] != '\0')
-        {
-            char *options = arguments[1];
-
-            for(int i = 1; options[i] != '\0'; i++)
-            {
-                if(options[i] == 'L')
-                {
-                    pwd_mode = LOGICAL;
-                }
-                else if(options[i] == 'P')
-                {
-                    pwd_mode = PHYSICAL;
-                }
-                else
-                {
-                    printf("pwd: Invalid option\n");
-                    return -1;
-                }
-            }
-            
-        }
+        
         else
         {
             printf("pwd: Invalid option\n");
             return -1;
         }
     }
+    
 
     if(pwd_mode == LOGICAL && help != true)
     {

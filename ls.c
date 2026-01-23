@@ -119,7 +119,6 @@ int ls(char* input_arg[], int* input_arg_number)
                 
             }
             closedir(d);
-            printf("\n");
         }
     }
     else

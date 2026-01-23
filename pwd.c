@@ -22,59 +22,71 @@ int pwd(char* input_arg[], int* input_arg_number)
     char command_arg[MAX_COMMAND_ARG]= {0};
     int command_arg_number = 0;
     int arg_size = 0;
-
     
-    if(input_arg[1] != NULL && input_arg[1][0] != '\0' && input_arg[1][1] != '\0') 
+    if(*input_arg_number > 1)
     {
 
-        if(input_arg[1][0] == '-' && input_arg[1][1] != '-')
+        if(input_arg[1] != NULL && input_arg[1][0] != '\0' && input_arg[1][1] != '\0') 
         {
 
-            arg_size = arguments_parser(input_arg, input_arg_number, command_arg, &command_arg_number);
-
-
-            for(int i = 0; i < command_arg_number; i++)
+            if(input_arg[1][0] == '-' && input_arg[1][1] != '-')
             {
-                switch(command_arg[i])
+
+                arg_size = arguments_parser(input_arg, input_arg_number, command_arg, &command_arg_number);
+
+
+                for(int i = 0; i < command_arg_number; i++)
                 {
-                    case 'L':
-                        pwd_mode = LOGICAL;
-                    break;
+                    switch(command_arg[i])
+                    {
+                        case 'L':
+                            pwd_mode = LOGICAL;
+                        break;
 
-                    case 'P':
-                        pwd_mode = PHYSICAL;
-                    break;
+                        case 'P':
+                            pwd_mode = PHYSICAL;
+                        break;
 
-                    default:
-                        printf("pwd: Invalid option '%c'\n", command_arg[i]);
-                        return -1;
+                        default:
+                            printf("pwd: Invalid option '%c'\n", command_arg[i]);
+                            return -1;
+                    
+                    }
+                }
                 
+            }
+            else if(input_arg[1][0] == '-' && input_arg[1][1] == '-' && input_arg[1][2] != '\0')
+            {
+                if(strcmp(input_arg[1], "--help") == 0)
+                {
+                    help = true;
+                    printf("\npwd - print name of current/working directory\n");
+                    printf("Arguments\n");
+                    printf("   \033[1m-L\033[0m \t print the value of $PWD\n");
+                    printf("   \033[1m-P\033[0m \t print the physical directory\n\n");
+                    printf("By default, `pwd' behaves as if `-L' were specified.\n\n");
+                }
+                else
+                {
+                    printf("pwd: Invalid option\n");
+                    return -1;
                 }
             }
             
-        }
-        else if(input_arg[1][0] == '-' && input_arg[1][1] == '-' && input_arg[1][2] != '\0')
-        {
-            if(strcmp(input_arg[1], "--help") == 0)
-            {
-                help = true;
-                printf("\npwd - print name of current/working directory\n");
-                printf("Arguments\n");
-                printf("   \033[1m-L\033[0m \t print the value of $PWD\n");
-                printf("   \033[1m-P\033[0m \t print the physical directory\n\n");
-                printf("By default, `pwd' behaves as if `-L' were specified.\n\n");
-            }
             else
             {
                 printf("pwd: Invalid option\n");
                 return -1;
             }
         }
-        
-        else
+    }
+    else
+    {
+        char *pwd_env = getenv("PWD");
+        if(pwd_env != NULL)
         {
-            printf("pwd: Invalid option\n");
-            return -1;
+            printf("%s\n", pwd_env);
+            return 0;
         }
     }
     

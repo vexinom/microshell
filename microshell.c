@@ -114,6 +114,7 @@ void handle_input(char input_line[], int input_size, char* history[], int *histo
     int length = 0;
     int cursor_position = 0;
     char c;
+    memset(input_line, 0, input_size); //cleaning input
 
     enable_raw_mode();
 

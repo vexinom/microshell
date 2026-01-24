@@ -72,8 +72,10 @@ void ls_print_time(time_t t)
 int ls(char* input_arg[], int* input_arg_number)
 {
 
-    char command_arg[MAX_COMMAND_ARG]= {0};
-    int command_arg_number = 0;
+    char short_arg[MAX_COMMAND_ARG]= {0}; //array for short arguments like -a -tf 
+    int short_arg_number = 0;
+    char long_arg[MAX_COMMAND_ARG][MAX_LEN_LONG_ARG]= {0}; //array for long arguments like --help
+    int long_arg_number = 0;
     int arg_size = 0;
 
     bool hidden_files = false;
@@ -123,12 +125,15 @@ int ls(char* input_arg[], int* input_arg_number)
     }
     else
     {
-        int arg_counter = 1;
-        arg_size = arguments_parser(input_arg, input_arg_number, command_arg, &command_arg_number);
-
-        for(int i = 0; i < command_arg_number; i++)
+        arg_size = arguments_parser(input_arg, input_arg_number, short_arg, &short_arg_number, long_arg, &long_arg_number);
+        if(arg_size == -1)
         {
-            switch(command_arg[i])
+            return -1;
+        }
+
+        for(int i = 0; i < short_arg_number; i++)
+        {
+            switch(short_arg[i])
             {
                 case 'a': hidden_files = true; break;
                 case 'i': inode = true; break;
@@ -136,54 +141,50 @@ int ls(char* input_arg[], int* input_arg_number)
                 case 'l': long_format = true; break;
                 case 'S': sort_by_size = true; break;
                 default:
-                    printf("ls: Invalid option -- '%c'\n", command_arg[i]);
+                    printf("ls: Invalid option -- '%c'\n", short_arg[i]);
                     return -1;
             }
         }
-        int long_arg_counter = 0;
 
-        for (int i = 1; i < *input_arg_number; i++)
+        for (int i = 0; i < long_arg_number; i++)
         {
-            if(input_arg[i][0] == '-' && input_arg[i][1] == '-')
+            if(strcmp(long_arg[i], "--help") == 0)
             {
-                long_arg_counter++;
-                if(strcmp(input_arg[i], "--help") == 0)
-                {
-                    printf("\nls - list directory contents\n");
-                    printf("Arguments\n");
-                    printf("   \033[1m-a  --all\033[0m\t - do not ignore entries starting with .\n");
-                    printf("\t\033[95mpurple\033[0m\t - hidden files/directories\n");
-                    printf("\t\033[92mgreen\033[0m\t - exectubles\n");
-                    printf("\t\033[94mgreen\033[0m\t - directories\n");
-                    printf("\twhite\t - regular files\n\n");
-                    printf("   \033[1m-i  --inode\033\t[0m - print the index number of each file\n");
-                    printf("   \033[1m-l  \033\t\t[0m - use a long listing format\n");
-                    printf("   \033[1m-t  \033\t\t[0m - sort by time, newest first\n");
-                    printf("   \033[1m-S  \033\t\t[0m - sort by file size, largest first\n");
-                    printf("\n");
-                    return 0;
-                }
-                else if(strcmp(input_arg[i], "--all") == 0)
-                {
-                    hidden_files = true;
-                }
-                else if(strcmp(input_arg[i], "--inode") == 0)
-                {
-                    inode = true;
-                }
-                else if(strcmp(input_arg[i], "--size") == 0)
-                {
-                    sort_by_size = true; 
-                }
-                else
-                {
-                    printf("ls: unrecognized option '%s'\n", input_arg[i]);
-                    return -1;
-                }
+                printf("\nls - list directory contents\n");
+                printf("Arguments\n");
+                printf("   \033[1m-a  --all\033[0m\t - do not ignore entries starting with .\n");
+                printf("\t\033[95mpurple\033[0m\t - hidden files/directories\n");
+                printf("\t\033[92mgreen\033[0m\t - exectubles\n");
+                printf("\t\033[94mgreen\033[0m\t - directories\n");
+                printf("\twhite\t - regular files\n\n");
+                printf("   \033[1m-i  --inode\033\t[0m - print the index number of each file\n");
+                printf("   \033[1m-l  \033\t\t[0m - use a long listing format\n");
+                printf("   \033[1m-t  \033\t\t[0m - sort by time, newest first\n");
+                printf("   \033[1m-S  \033\t\t[0m - sort by file size, largest first\n");
+                printf("\n");
+                return 0;
             }
+            else if(strcmp(long_arg[i], "--all") == 0)
+            {
+                hidden_files = true;
+            }
+            else if(strcmp(long_arg[i], "--inode") == 0)
+            {
+                inode = true;
+            }
+            else if(strcmp(long_arg[i], "--size") == 0)
+            {
+                sort_by_size = true; 
+            }
+            else
+            {
+                printf("ls: unrecognized option '%s'\n", long_arg[i]);
+                return -1;
+            }
+            
         }
         
-        int path = 1 + arg_size + long_arg_counter; 
+        int path = 1 + arg_size; 
         do
         {
             DIR *d;

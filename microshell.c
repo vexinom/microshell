@@ -77,7 +77,6 @@ void welcome_screen(void)
 void command_prompt(void)
 {
     char cwd[PATH_MAX], hostname[256]; //current working directory, PATH MAX -> macro from limits.h
-    char *buf;
     struct passwd *pw =  getpwuid(geteuid());// getlogin() doesn't work
     char *username = pw -> pw_name;
 
@@ -376,6 +375,16 @@ int handle_commands(char* input_arg[], int* input_arg_number)
             }
             return 0;
         }
+
+        else if(strcmp(input_arg[0], "cp") == 0)
+        {
+            if(cp(input_arg, input_arg_number) != 0)
+            {
+                printf("Type 'cp --help' for more information.\n");
+                return -1;    
+            }
+            return 0;
+        }
         else
         {
             input_arg[*input_arg_number] = NULL;
@@ -391,14 +400,17 @@ int handle_commands(char* input_arg[], int* input_arg_number)
                 execvp(input_arg[0], input_arg);
                 perror("execv");
                 exit(EXIT_FAILURE);
+                return -1;
             }
             else
             {
                 wait(NULL);
+                return 0;
             }
             
         }
     }
+    return 0;
 }
 
 

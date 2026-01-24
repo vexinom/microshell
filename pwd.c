@@ -24,7 +24,7 @@ int pwd(char* input_arg[], int* input_arg_number)
     int long_arg_number = 0;
     int arg_size = 0;
 
-    if(*input_arg_number = 1)
+    if(*input_arg_number == 1)
     {
         char *pwd_env = getenv("PWD");
         if(pwd_env != NULL)

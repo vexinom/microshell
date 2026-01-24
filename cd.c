@@ -9,6 +9,8 @@
 
 int cd(char* input_arg[], int* input_arg_number)
 {
+    
+
     if(*input_arg_number == 1)
     {
         if(chdir(getenv("HOME")) != 0)
@@ -83,5 +85,6 @@ int cd(char* input_arg[], int* input_arg_number)
         }
         
     }
+    return 0;
 }
 

@@ -21,23 +21,48 @@ void help()
     printf("\n");
 
 }
-int arguments_parser(char* input_arg[], int* input_arg_number, char command_arg[], int * command_arg_number)
+
+int arguments_parser(char* input_arg[], int* input_arg_number, char short_arg[], int * short_arg_number, char long_arg[][MAX_LEN_LONG_ARG], int * long_arg_number)
 {
-    int i = 1;
-    while(i < *input_arg_number && input_arg[i][0] == '-' && input_arg[i][1] != '-' && input_arg[i][1] != '\0')
+    int i = 1; //skip first argument like cd, cp etc
+
+    while(i < *input_arg_number && (input_arg[i][0] == '-'))
     {
-        if(*command_arg_number >= MAX_COMMAND_ARG)
+        if(*short_arg_number >= MAX_COMMAND_ARG || *long_arg_number >= MAX_COMMAND_ARG)
         {
             return -1;
         }
-        size_t len = strlen(input_arg[i]);
 
-        for (size_t j = 1; j < len; j++)
+        if(input_arg[i][1] == '-')
         {
-            command_arg[*command_arg_number] = input_arg[i][j];
-            (*command_arg_number)++;
+            size_t len = strlen(input_arg[i]);
+
+            if(len >=  MAX_LEN_LONG_ARG)
+            {
+                printf("Too long argument '%s\n", input_arg[i]);
+                return -1;
+            }
+
+            strncpy(long_arg[*long_arg_number], input_arg[i], MAX_LEN_LONG_ARG);
+            long_arg[*long_arg_number][MAX_LEN_LONG_ARG - 1] = '\0';
+
+            (*long_arg_number)++;
+            i++;
         }
-        i++;
+        else
+        {
+            size_t len = strlen(input_arg[i]);
+
+            for (size_t j = 1; j < len; j++)
+            {
+                short_arg[*short_arg_number] = input_arg[i][j];
+                (*short_arg_number)++;
+            }
+            i++;
+        }
+
+        
     }
     return i - 1;
 }
+

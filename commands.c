@@ -5,16 +5,12 @@
 #include <stdbool.h> 
 
 
-
-
-
-
 void help()
 {
     printf("\n");
-    printf("Some random microshell idk\n");
     printf("Available commands:\n\n");
     printf(" cd\t- change the working directory\n");
+    printf(" cp\t- copy files and directories\n");
     printf(" echo\t- display a line of text\n");
     printf(" ls\t- list directory contents\n");
     printf(" pwd\t- print name of current/working directory\n");

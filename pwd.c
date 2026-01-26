@@ -64,10 +64,12 @@ int pwd(char* input_arg[], int* input_arg_number)
             if(strcmp(long_arg[i], "--help") == 0)
             {
                     printf("\npwd - print name of current/working directory\n");
+                    printf("pwd [ARGUMENT]\n");
                     printf("Arguments\n");
                     printf("   \033[1m-L\033[0m \t print the value of $PWD\n");
                     printf("   \033[1m-P\033[0m \t print the physical directory\n\n");
                     printf("By default, `pwd' behaves as if `-L' were specified.\n\n");
+                    return 0;
             }
             else
             {

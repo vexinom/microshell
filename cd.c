@@ -36,7 +36,12 @@ int cd(char* input_arg[], int* input_arg_number)
             {
                 if(strcmp(input_arg[1], "--help") == 0)
                 {
-                    printf("help or something idk\n");
+                    printf("\ncd - Change the shell working directory\n");
+                    printf("cd [ARGUMENT]/[DIRECTORY]\n");
+                    printf("   \033[1m..\033[0m \t go up one directory\n");
+                    printf("   \033[1m~\033[0m \t go to home directory\n");
+                    printf("   \033[1m-\033[0m \t go to previous directory\n");
+                    printf("\n");
                     return 0;
                 }
             }

@@ -151,6 +151,7 @@ int ls(char* input_arg[], int* input_arg_number)
             if(strcmp(long_arg[i], "--help") == 0)
             {
                 printf("\nls - list directory contents\n");
+                printf("ls [ARGUMENT]... [FILE]...\n");
                 printf("Arguments\n");
                 printf("   \033[1m-a  --all\033[0m\t - do not ignore entries starting with .\n");
                 printf("\t\033[95mpurple\033[0m\t - hidden files/directories\n");
@@ -160,7 +161,7 @@ int ls(char* input_arg[], int* input_arg_number)
                 printf("   \033[1m-i  --inode\033\t[0m - print the index number of each file\n");
                 printf("   \033[1m-l  \033\t\t[0m - use a long listing format\n");
                 printf("   \033[1m-t  \033\t\t[0m - sort by time, newest first\n");
-                printf("   \033[1m-S  \033\t\t[0m - sort by file size, largest first\n");
+                printf("   \033[1m-S  --size\033\t[0m - sort by file size, largest first\n");
                 printf("\n");
                 return 0;
             }

@@ -65,6 +65,7 @@ int echo(char* input_arg[], int* input_arg_number)
             if(strcmp(long_arg[i], "--help") == 0)
             {
                 printf("\necho - display a line of text\n");
+                printf("echo [ARGUMENT]... [STRING]...\n");
                 printf("Arguments\n");
                 printf("   \033[1m-n  \033[0m\t\t - do not output the trailing newline\n");
                 printf("   \033[1m-e  \033[0m\t\t - enable interpretation of backslash escapes\n");

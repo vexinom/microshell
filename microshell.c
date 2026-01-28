@@ -55,7 +55,7 @@ int main(void)
         parsing_input(input_line, MAX_CHAR_LINE, arguments, &argument_number);
         if(handle_commands(arguments, &argument_number) != 0)
         {
-            return -1;
+            
         }
         
     }

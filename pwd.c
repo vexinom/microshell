@@ -26,10 +26,9 @@ int pwd(char* input_arg[], int* input_arg_number)
 
     if(*input_arg_number == 1)
     {
-        char *pwd_env = getenv("PWD");
-        if(pwd_env != NULL)
+        if(getcwd(cwd, sizeof(cwd)) != NULL)
         {
-            printf("%s\n", pwd_env);
+            printf("%s\n", cwd);
             return 0;
         }
     }

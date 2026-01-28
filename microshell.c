@@ -219,6 +219,15 @@ void handle_input(char input_line[], int input_size, char* history[], int *histo
             }
 
         }
+
+        else if(c == '\t')
+        {
+            if(length < input_size - 1)
+            {
+                continue;
+            }
+
+        }
         else
         {
             if(length < input_size - 1)

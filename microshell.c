@@ -42,9 +42,9 @@ int main(void)
     int history_curr_position = 0;
     char *history[MAX_HISTORY_LEN];
 
-    if(load_history(history, &history_counter, &history_curr_position) != 0)
+    if(load_history(history, &history_counter, &history_curr_position) != 0) 
     {
-        return -1;
+        
     }
     
     //MAIN LOOP

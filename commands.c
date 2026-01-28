@@ -8,6 +8,7 @@
 void help()
 {
     printf("\n");
+    printf("Martyna Plenzler 498810\n");
     printf("Available commands:\n\n");
     printf(" cd\t- change the working directory\n");
     printf(" cp\t- copy files and directories\n");
